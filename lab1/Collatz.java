@@ -19,7 +19,7 @@ public class Collatz {
         System.out.print(n + " ");
         while (n != 1) {
             n = nextNumber(n);
-            System.out.print(n + " ");
+            System.out.print(n + "  ");
         }
         System.out.println();
     }
