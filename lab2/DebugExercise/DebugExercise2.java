@@ -31,6 +31,10 @@ public class DebugExercise2 {
 
         return returnArray;
     }
+    public int max(int a,int b)
+    {
+        return Math.max(a,b);
+    }
 
     /** Returns the sum of all elements in x. */
     public static int arraySum(int[] x) {
