@@ -31,7 +31,7 @@ public class DebugExercise2 {
 
         return returnArray;
     }
-    public int max(int a,int b)
+    public static int max(int a,int b)
     {
         return Math.max(a,b);
     }
