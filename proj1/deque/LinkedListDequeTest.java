@@ -16,7 +16,7 @@ public class LinkedListDequeTest {
 
 
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        LinkedListDeque lld1 = new LinkedListDeque();
 
 		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
 		lld1.addFirst("front");

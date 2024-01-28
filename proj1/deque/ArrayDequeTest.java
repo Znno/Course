@@ -16,7 +16,7 @@ public class ArrayDequeTest {
 
 
 
-        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque lld1 = new ArrayDeque();
 
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
