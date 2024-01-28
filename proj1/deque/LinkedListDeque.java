@@ -12,7 +12,7 @@ public class LinkedListDeque <T> {
     };
     int size;
     node sent=new node();
-    LinkedListDeque(){
+    public LinkedListDeque(){
         sent.prev=sent;
         sent.next=sent;
         size=0;
