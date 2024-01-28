@@ -128,19 +128,7 @@ public class ArrayDeque <T>{
     public T get(int index){
         if (index>=size)
             return null;
-        int cnt=0;
-        for(int i=sent.start;;i++){
-            i%=cap;
-
-
-
-            if(cnt==index){
-                return arr[i];
-
-            }
-            cnt++;
-
-        }
+        return arr[((sent.start+index)+cap)%cap];
     }
     public boolean equals(Object o){
         if(!(o instanceof ArrayDeque))
@@ -198,7 +186,8 @@ public class ArrayDeque <T>{
         a2.removeFirst();
         a2.removeFirst();
         a2.removeFirst();
-        System.out.println(a1.equals(a2));
+        a1.printDeque();
+        System.out.println(a1.get(3));
 
 
 
@@ -209,7 +198,7 @@ public class ArrayDeque <T>{
 
 
 
-        a2.printDeque();
+       // a2.printDeque();
     }
 
 }
