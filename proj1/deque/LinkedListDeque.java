@@ -2,7 +2,9 @@ package deque;
 
 import com.puppycrawl.tools.checkstyle.checks.indentation.NewHandler;
 
-public class LinkedListDeque <T> {
+import java.util.Iterator;
+
+public class LinkedListDeque <T> implements Deque<T>, Iterable<T> {
 
     private class node{
         public node prev;
@@ -36,9 +38,6 @@ public class LinkedListDeque <T> {
         temp.prev=sent.prev;
         sent.prev.next=temp;
         sent.prev=temp;
-    }
-    public boolean isEmpty(){
-        return (size==0);
     }
     public int size(){
         return this.size;
@@ -77,9 +76,11 @@ public class LinkedListDeque <T> {
         return dude;
     }
     public T get(int index){
+        if(index>=size)
+            return null;
         node temp=sent.next;
         int cnt=0;
-        while (temp!=null){
+        while (temp!=sent){
             if(cnt++==index)
                 return temp.data;
         temp=temp.next;
@@ -103,18 +104,42 @@ public class LinkedListDeque <T> {
         return true;
 
     }
+    private T go(node x, int idx){
+        if(idx==0)
+            return x.data;
+        return go(x.next,idx-1);
+    }
+
+    public T getRecursive(int index){
+        node p=sent;
+        return go(p,index);
+    }
+    public Iterator<T> iterator(){
+        return new it();
+    }
+    private class it implements Iterator<T>{
+        int pos;
+        public it(){
+            pos=0;
+        }
+        public boolean hasNext(){
+            return (pos<size);
+        }
+        public T next(){
+            T x=get(pos);
+            pos++;
+            return x;
+
+        }
+    }
     public static void main(String args[]){
-        LinkedListDeque d1=new LinkedListDeque();
+        LinkedListDeque<Integer> d1=new LinkedListDeque<Integer>();
         d1.addFirst(1);
         d1.addFirst(2);
         d1.addFirst(3);
         LinkedListDeque d2= new LinkedListDeque();
-        d2.addFirst(1);
-        d2.addFirst(2);
-        d2.addFirst(4);
-
-        d1.printDeque();
-        d2.printDeque();
+        for(int x:d1)
+            System.out.println(x);
     }
 
 
