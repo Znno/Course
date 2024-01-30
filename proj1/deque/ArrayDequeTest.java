@@ -1,10 +1,13 @@
 package deque;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 
-/** Performs some basic linked list tests. */
+/**
+ * Performs some basic linked list tests.
+ */
 public class ArrayDequeTest {
 
     @Test
@@ -13,7 +16,6 @@ public class ArrayDequeTest {
      *
      * && is the "and" operation. */
     public void addIsEmptySizeTest() {
-
 
 
         ArrayDeque lld1 = new ArrayDeque();
@@ -83,8 +85,8 @@ public class ArrayDequeTest {
     public void multipleParamTest() {
 
 
-        ArrayDeque<String>  lld1 = new ArrayDeque<String>();
-        ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<Double>();
         ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
@@ -132,6 +134,30 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
+
+    }
+
+    @Test
+    public void testo() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 64; i++) {
+            lld1.addLast(3);
+
+        }
+        assertEquals("wrong size", 64, lld1.size());
+        for (int i = 0; i < 64; i++) {
+            lld1.removeFirst();
+        }
+        assertEquals("wrong size", 0, lld1.size());
+        for (int i = 0; i < 1000; i++) {
+            lld1.addLast(3);
+
+        }
+        assertEquals("wrong size", 1000, lld1.size());
+        for (int i = 0; i < 256; i++) {
+            lld1.removeFirst();
+        }
+        assertEquals("wrong size", 744, lld1.size());
 
     }
 }
