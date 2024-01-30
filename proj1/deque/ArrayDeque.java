@@ -5,28 +5,28 @@ import java.util.Iterator;
 
 public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
 
-    T[] arr = (T[]) new Object[8];
-    int size = 0;
+    private T[] arr = (T[]) new Object[8];
+    private int size = 0;
 
-    public class node {
-        int start;
-        int end;
+    private class Node {
+        private int start;
+        private int end;
     }
 
     private int cap = 8;
-    node sent = new node();
+    private Node sent = new Node();
 
     public ArrayDeque() {
         sent.start = 0;
         sent.end = 0;
     }
 
-    public void resize(int lol) {
+    private void resize(int lol) {
         T[] temp = (T[]) new Object[lol];
         int cnt = 0;
 
 
-        for (int i = sent.start; ; i++) {
+        for (int i = sent.start;; i++) {
             i = i % (cap);
             temp[cnt] = arr[i];
             if (i == sent.end) {
@@ -69,7 +69,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
         if (size == 0) {
             arr[sent.start] = item;
-            sent.end = sent.start = 0;
+            sent.end = sent.start;
             size++;
             return;
         }
@@ -91,7 +91,7 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             System.out.println();
             return;
         }
-        for (int i = sent.start; ; i++) {
+        for (int i = sent.start;; i++) {
             i %= cap;
 
             System.out.print(arr[i]);
@@ -166,13 +166,13 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public Iterator<T> iterator() {
-        return new it();
+        return new It();
     }
 
-    private class it implements Iterator<T> {
+    private class It implements Iterator<T> {
         int pos;
 
-        public it() {
+        private It() {
             pos = 0;
         }
 
@@ -186,7 +186,6 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             return x;
         }
     }
-
 
 
 }

@@ -5,7 +5,6 @@ import deque.Deque;
 
 import deque.ArrayDeque;
 
-import java.util.ArrayList;
 
 //Note: This file will not compile until you complete the Deque implementations
 public class GuitarString {
@@ -18,13 +17,15 @@ public class GuitarString {
     private static final double DECAY = .996; // energy decay factor
 
     /* Buffer for storing sound data. */
-    private ArrayDeque<Double> buffer = new ArrayDeque<>();
+    private Deque<Double> buffer;
 
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
-        long len = Math.round(SR / frequency);
-        for (int i = 0; i < len; i++)
-            buffer.addLast((double) 0);
+        int len = (int) Math.round(SR / frequency);
+        buffer = new ArrayDeque<>();
+        for (int i = 0; i < len; i++) {
+            buffer.addLast(0.0);
+        }
 
     }
 
@@ -37,8 +38,9 @@ public class GuitarString {
         //       are different from each other. It means you should repeatedly call
         //       Math.random() - 0.5 to generate new random numbers for each array index.
         int len = buffer.size();
-        for (int i = 0; i < len; i++)
+        for (int i = 0; i < len; i++) {
             buffer.removeFirst();
+        }
         for (int i = 0; i < len; i++) {
             double r = Math.random() - 0.5;
             buffer.addLast(r);

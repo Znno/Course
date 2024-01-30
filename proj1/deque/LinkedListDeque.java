@@ -1,22 +1,19 @@
 package deque;
 
-import com.puppycrawl.tools.checkstyle.checks.indentation.NewHandler;
-
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
-    private class node {
-        public node prev;
-        public T data;
-        public node next;
+    private class Node {
+        private Node prev;
+        private T data;
+        private Node next;
 
     }
 
     ;
-    int size;
-    node sent = new node();
-
+    private int size;
+    private Node sent = new Node();
     public LinkedListDeque() {
         sent.prev = sent;
         sent.next = sent;
@@ -25,7 +22,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     public void addFirst(T item) {
         size++;
-        node temp = new node();
+        Node temp = new Node();
         temp.data = item;
         temp.prev = sent;
         temp.next = sent.next;
@@ -36,7 +33,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     public void addLast(T item) {
         size++;
-        node temp = new node();
+        Node temp = new Node();
         temp.data = item;
         temp.next = sent;
         temp.prev = sent.prev;
@@ -49,7 +46,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public void printDeque() {
-        node p = sent.next;
+        Node p = sent.next;
         while (p != sent) {
             System.out.print(p.data);
             System.out.print(" ");
@@ -63,7 +60,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         if (size == 0) {
             return null;
         }
-        node h = sent.next;
+        Node h = sent.next;
         sent.next = sent.next.next;
         sent.next.prev = sent;
         T dude = h.data;
@@ -77,7 +74,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         if (size == 0) {
             return null;
         }
-        node h = sent.prev;
+        Node h = sent.prev;
         sent.prev = sent.prev.prev;
         sent.prev.next = sent;
         T dude = h.data;
@@ -90,7 +87,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
         if (index >= size) {
             return null;
         }
-        node temp = sent.next;
+        Node temp = sent.next;
         int cnt = 0;
         while (temp != sent) {
             if (cnt++ == index) {
@@ -121,7 +118,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
     }
 
-    private T go(node x, int idx) {
+    private T go(Node x, int idx) {
         if (idx == 0) {
             return x.data;
         }
@@ -129,25 +126,22 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     }
 
     public T getRecursive(int index) {
-        node p = sent.next;
+        Node p = sent.next;
         return go(p, index);
     }
 
     public Iterator<T> iterator() {
-        return new it();
+        return new It();
     }
 
-    private class it implements Iterator<T> {
+    private class It implements Iterator<T> {
         int pos;
-
-        public it() {
+        private It() {
             pos = 0;
         }
-
         public boolean hasNext() {
             return (pos < size);
         }
-
         public T next() {
             T x = get(pos);
             pos++;
@@ -155,8 +149,6 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
 
         }
     }
-
-
 
 
 }
