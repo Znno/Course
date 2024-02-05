@@ -4,7 +4,7 @@ import javax.lang.model.util.Elements;
 import java.util.Iterator;
 import java.util.Set;
 
-public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
+public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private int size;
 
     private class node {
@@ -85,10 +85,6 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
         return curr;
     }
 
-    public K getsent() {
-        return sent.keyo;
-    }
-
     @Override
     public void put(K key, V value) {
         if (find(key, sent))
@@ -99,7 +95,7 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
         return;
     }
 
-    public void go(node n) {
+    private void go(node n) {
         if (n == null)
             return;
         go(n.left);
