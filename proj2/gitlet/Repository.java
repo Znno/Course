@@ -112,7 +112,7 @@ public class Repository {
         }
     }
 
-    public static void commit(String message) {
+    public static void commit(String message, String secondParent) {
         TreeMap<String, String> addMap = readObject(ADD_STAGE_FILE, TreeMap.class);
         TreeMap<String, String> removemap = readObject(REMOVE_STAGE_FILE, TreeMap.class);
         if (addMap.isEmpty() && removemap.isEmpty()) {
@@ -122,7 +122,7 @@ public class Repository {
         String sha = readContentsAsString(HEAD);
         File file = join(COMMITS_DIR, sha);
         Commit currentCommit = readObject(file, Commit.class);
-        Commit newCommit = new Commit(message, currentCommit.getUID());
+        Commit newCommit = new Commit(message, currentCommit.getUID(), secondParent);
         newCommit.addBlobs(currentCommit.getBlobs());
         newCommit.addBlobs(addMap);
         newCommit.removeBlobs(removemap);
@@ -381,8 +381,36 @@ public class Repository {
 
         Commit newCommit = readObject(commitFile, Commit.class);
 
+        String commitSha = readContentsAsString(HEAD);
+        File currentCommitFile = join(COMMITS_DIR, commitSha);
+        Commit currentCommit = readObject(currentCommitFile, Commit.class);
+
         TreeMap<String, String> addMap = readObject(ADD_STAGE_FILE, TreeMap.class);
         TreeMap<String, String> removeMap = readObject(REMOVE_STAGE_FILE, TreeMap.class);
+
+        List<String> files = plainFilenamesIn(CWD);
+        boolean valid = true;
+        TreeMap<String, String> untracked = new TreeMap<String, String>();
+        for (String fileName : files) {
+            if (removeMap.get(fileName) != null) {
+                untracked.put(fileName, fileName);
+            }
+            if (addMap.get(fileName) == null && currentCommit.getBlobs().get(fileName) == null) {
+                untracked.put(fileName, fileName);
+            }
+        }
+        for (Map.Entry<String, String> set : untracked.entrySet()) {
+            if (newCommit.getBlobs().get(set.getValue()) != null) {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid) {
+            String m1 = "There is an untracked file in the way;";
+            String m2 = " delete it, or add and commit it first.";
+            System.out.println(m1 + m2);
+            System.exit(0);
+        }
 
         for (Map.Entry<String, String> set : newCommit.getBlobs().entrySet()) {
             File blobFile = join(BLOBS_DIR, set.getValue());
@@ -398,6 +426,7 @@ public class Repository {
                 deletedfile.delete();
             }
         }
+        writeContents(HEAD, newCommit.getUID());
         curB.setBranchHead(newCommit.getUID());
         curB.saveBranch();
         TreeMap<String, String> brMap = readObject(BRANCHES, TreeMap.class);
@@ -440,7 +469,6 @@ public class Repository {
         String commitSha = readContentsAsString(HEAD);
         File currentCommitFile = join(COMMITS_DIR, commitSha);
         Commit currentCommit = readObject(currentCommitFile, Commit.class);
-        Commit mergeCommit = readObject(currentCommitFile, Commit.class);
 
         List<String> files = plainFilenamesIn(CWD);
         boolean valid = true;
@@ -497,11 +525,11 @@ public class Repository {
                 llist.add(tempCommit.getSecParent());
             }
         }
-        if (splitPoint.equals(branchName)) {
+        if (splitPoint.equals(newCommit.getUID())) {
             System.out.println("Given branch is an ancestor of the current branch.");
             System.exit(0);
         }
-        if (splitPoint.equals(currBranch)) {
+        if (splitPoint.equals(currentCommit.getUID())) {
             checkoutBranch(branchName);
             System.out.println("Current branch fast-forwarded.");
             System.exit(0);
@@ -520,69 +548,57 @@ public class Repository {
         }
         boolean conflict = false;
         for (Map.Entry<String, Boolean> set : all.entrySet()) {
-            boolean a = (splitPointCommit.getBlobs().get(set.getKey()) == null);
-            boolean b = (currentCommit.getBlobs().get(set.getKey()) == null);
-            boolean c = (newCommit.getBlobs().get(set.getKey()) == null);
-            String fir = splitPointCommit.getBlobs().get(set.getKey());
-            String sec = currentCommit.getBlobs().get(set.getKey());
-            String third = newCommit.getBlobs().get(set.getKey());
-            boolean firstRule = (a && !b && !c && !sec.equals(third));
-            boolean secondRule = (!a && ((b && !c&&!fir.equals(third)) || (!b && c&&!fir.equals(sec))));
-            boolean thirdRule = (!a && !b && !c && !fir.equals(sec) && !fir.equals(third) && !sec.equals(third));
-            if (firstRule || secondRule || thirdRule) {
+            String spBlob = splitPointCommit.getBlobs().get(set.getKey());
+            String curBlob = currentCommit.getBlobs().get(set.getKey());
+            String newBlob = newCommit.getBlobs().get(set.getKey());
+            boolean first = Objects.equals(curBlob, newBlob);
+            boolean second = Objects.equals(spBlob, curBlob);
+            boolean third = Objects.equals(spBlob, newBlob);
+            if (!first && !second && !third) {
                 String s = "<<<<<<< HEAD\n";
-                if (!b) {
-                    File wantedFile = join(BLOBS_DIR, sec);
-                    s += readContentsAsString(wantedFile);
+                if (curBlob != null) {
+                    File wantedFile = join(BLOBS_DIR, curBlob);
+                    Blob blobObject = readObject(wantedFile, Blob.class);
+                    s += blobObject.getContent();
                 }
                 s += "=======\n";
-                if (!c) {
-                    File wantedFile = join(BLOBS_DIR, third);
-                    s += readContentsAsString(wantedFile);
+                if (newBlob != null) {
+                    File wantedFile = join(BLOBS_DIR, newBlob);
+                    Blob blobObject = readObject(wantedFile, Blob.class);
+                    s += blobObject.getContent();
                 }
                 s += ">>>>>>>\n";
-                mergeCommit.getBlobs().put(set.getKey(), s);
+                File blobFule = join(CWD, set.getKey());
+                writeContents(blobFule, s);
+                add(set.getKey());
                 conflict = true;
             }
-            if (!a) {
-                if (!b && !c) {
-                    if (fir.equals(sec) && !fir.equals(third)) {
-                        mergeCommit.getBlobs().put(set.getKey(), sec);
+            if (spBlob != null) {
+                if (newBlob != null) {
+                    if (spBlob.equals(curBlob) && !spBlob.equals(newBlob)) {
                         File writeOver = join(CWD, set.getKey());
-                        File blobFile = join(BLOBS_DIR, sec);
+                        File blobFile = join(BLOBS_DIR, newBlob);
                         Blob blobObject = readObject(blobFile, Blob.class);
                         writeContents(writeOver, blobObject.getContent());
+                        add(set.getKey());
+                    }
+                } else {
+                    if (spBlob.equals(curBlob)) {
+                        rm(set.getKey());
                     }
                 }
-                if (!b && c && fir.equals(sec)) {
-                    mergeCommit.getBlobs().remove(set.getKey());
-                    File writeOver = join(CWD, set.getKey());
-                    writeOver.delete();
-                }
             } else {
-                if (b && !c) {
-                    mergeCommit.getBlobs().put(set.getKey(), third);
-                    mergeCommit.getBlobs().put(set.getKey(), sec);
+                if (curBlob == null && newBlob != null) {
                     File writeOver = join(CWD, set.getKey());
-                    File blobFile = join(BLOBS_DIR, third);
+                    File blobFile = join(BLOBS_DIR, newBlob);
                     Blob blobObject = readObject(blobFile, Blob.class);
                     writeContents(writeOver, blobObject.getContent());
+                    add(set.getKey());
                 }
             }
         }
-        mergeCommit.setMessage("Merged " + branchName + " into " + currentName + ".");
-        mergeCommit.setParent(currentCommit.getUID());
-        mergeCommit.setSecParent(newCommit.getUID());
-        writeContents(HEAD, mergeCommit.getUID());
-        mergeCommit.saveCommit();
-        curB.setBranchHead(mergeCommit.getUID());
-        curB.saveBranch();
-        addMap.clear();
-        removeMap.clear();
-        writeObject(ADD_STAGE_FILE, addMap);
-        writeObject(REMOVE_STAGE_FILE, removeMap);
-        brMap.put(curB.getName(), curB.getUID());
-        writeObject(BRANCHES, brMap);
+        String msg = "Merged " + branchName + " into " + currentName + ".";
+        commit(msg, newCommit.getUID());
         if (conflict) {
             System.out.println("Encountered a merge conflict.");
         }

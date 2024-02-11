@@ -255,7 +255,6 @@ class Utils {
     static GitletException error(String msg, Object... args) {
         return new GitletException(String.format(msg, args));
     }
-
     /**
      * Print a message composed from MSG and ARGS as for the String.format
      * method, followed by a newline.

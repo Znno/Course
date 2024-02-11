@@ -42,7 +42,15 @@ public class Commit implements Serializable {
     public Commit(String message, String parent) {
         this.message = message;
         this.parent = parent;
+        this.secParent = null;
         date = new Date();
+    }
+
+    public Commit(String message, String firstParent, String secondParent) {
+        this.message = message;
+        this.parent = firstParent;
+        this.secParent = secondParent;
+        this.date = new Date();
     }
 
     public Date getDate() {
@@ -51,7 +59,7 @@ public class Commit implements Serializable {
 
     @Override
     public String toString() {
-        return message + date.toString() + parent + blobs.toString();
+        return message + date.toString() + parent + secParent + blobs.toString();
     }
 
     public String getUID() {
