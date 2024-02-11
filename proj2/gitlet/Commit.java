@@ -3,8 +3,8 @@ package gitlet;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static gitlet.Utils.*;
 
@@ -28,17 +28,20 @@ public class Commit implements Serializable {
     private String message;
     private Date date;
     private String parent;
-    private HashMap<String, String> blobs = new HashMap<>();
+    private String secParent;
+    private TreeMap<String, String> blobs = new TreeMap<>();
+    
 
     public Commit() {
         message = "initial commit";
         date = new Date(0);
         parent = null;
+        secParent=null;
     }
 
-    public Commit(String _message, String _parent) {
-        message = _message;
-        parent = _parent;
+    public Commit(String message, String parent) {
+        this.message = message;
+        this.parent = parent;
         date = new Date();
     }
 
@@ -60,17 +63,17 @@ public class Commit implements Serializable {
         writeObject(commitFile, this);
     }
 
-    public void addBlobs(HashMap<String, String> oldAddMap) {
+    public void addBlobs(TreeMap<String, String> oldAddMap) {
         blobs.putAll(oldAddMap);
     }
 
-    public void removeBlobs(HashMap<String, String> oldRemoveMap) {
+    public void removeBlobs(TreeMap<String, String> oldRemoveMap) {
         for (Map.Entry<String, String> set : oldRemoveMap.entrySet()) {
             blobs.remove(set.getKey());
         }
     }
 
-    public HashMap<String, String> getBlobs() {
+    public TreeMap<String, String> getBlobs() {
         return blobs;
     }
 
@@ -84,6 +87,18 @@ public class Commit implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+    public void setSecParent(String sec){
+        secParent=sec;
+    }
+    public String getSecParent(){
+        return secParent;
+    }
+    public void setParent(String s){
+        parent=s;
+    }
+    public void setMessage (String s){
+        message=s;
     }
 
 }

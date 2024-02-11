@@ -7,25 +7,29 @@ import static gitlet.Utils.*;
 
 public class Branch implements Serializable {
     private String name;
-    private static String lastCommit;
+    private String branchHead;
 
-    public Branch(String _name, String _lastCommit) {
-        name = _name;
-        lastCommit = _lastCommit;
+    public Branch(String name, String branchHead) {
+        this.name = name;
+        this.branchHead = branchHead;
     }
 
-    public static void setLastCommit(String newCommit) {
-        lastCommit = newCommit;
+    public void setBranchHead(String newHead) {
+        branchHead = newHead;
     }
 
     @Override
     public String toString() {
-        String objContent = name + lastCommit;
+        String objContent = name + branchHead;
         return objContent;
     }
 
     public String getUID() {
-        return sha1(toString());
+        return sha1(this.toString());
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void saveBranch() {
@@ -33,7 +37,7 @@ public class Branch implements Serializable {
         writeObject(bracnhFile, this);
     }
 
-    public String getLastCommit() {
-        return lastCommit;
+    public String getBranchHead() {
+        return branchHead;
     }
 }

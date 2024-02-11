@@ -183,13 +183,12 @@ class Utils {
     /**
      * Filter out all but plain files.
      */
-    private static final FilenameFilter PLAIN_FILES =
-            new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return new File(dir, name).isFile();
-                }
-            };
+    private static final FilenameFilter PLAIN_FILES = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return new File(dir, name).isFile();
+        }
+    };
 
     /**
      * Returns a list of the names of all plain files in the directory DIR, in
@@ -256,7 +255,6 @@ class Utils {
     static GitletException error(String msg, Object... args) {
         return new GitletException(String.format(msg, args));
     }
-
     /**
      * Print a message composed from MSG and ARGS as for the String.format
      * method, followed by a newline.
