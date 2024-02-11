@@ -465,7 +465,7 @@ public class Repository {
             System.exit(0);
         }
         TreeMap<String,Boolean> exist=new TreeMap<String,Boolean>();
-        List<String> list=new LinkedList<String>();
+        List<String> list=new LinkedList<>();
         list.addLast(currentCommit.getUID());
         while (!list.isEmpty()){
             String node=list.removeLast();
