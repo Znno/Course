@@ -484,7 +484,7 @@ public class Repository {
         String splitPoint = null;
         while (!llist.isEmpty()) {
             String node = llist.remove();
-            if (exist.get(node)) {
+            if (exist.get(node)!=null) {
                 splitPoint = node;
                 break;
             }
