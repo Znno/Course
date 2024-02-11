@@ -30,13 +30,13 @@ public class Commit implements Serializable {
     private String parent;
     private String secParent;
     private TreeMap<String, String> blobs = new TreeMap<>();
-    
+
 
     public Commit() {
         message = "initial commit";
         date = new Date(0);
         parent = null;
-        secParent=null;
+        secParent = null;
     }
 
     public Commit(String message, String parent) {
@@ -88,17 +88,21 @@ public class Commit implements Serializable {
     public String getMessage() {
         return message;
     }
-    public void setSecParent(String sec){
-        secParent=sec;
+
+    public void setSecParent(String sec) {
+        secParent = sec;
     }
-    public String getSecParent(){
+
+    public String getSecParent() {
         return secParent;
     }
-    public void setParent(String s){
-        parent=s;
+
+    public void setParent(String s) {
+        parent = s;
     }
-    public void setMessage (String s){
-        message=s;
+
+    public void setMessage(String s) {
+        message = s;
     }
 
 }
