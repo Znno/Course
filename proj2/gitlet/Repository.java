@@ -484,7 +484,7 @@ public class Repository {
         String splitPoint = null;
         while (!llist.isEmpty()) {
             String node = llist.remove();
-            if (exist.get(node)!=null) {
+            if (exist.get(node) != null) {
                 splitPoint = node;
                 break;
             }
@@ -527,7 +527,7 @@ public class Repository {
             String sec = currentCommit.getBlobs().get(set.getKey());
             String third = newCommit.getBlobs().get(set.getKey());
             boolean firstRule = (a && !b && !c && !sec.equals(third));
-            boolean secondRule = (!a && ((b && !c) || (!b && c)));
+            boolean secondRule = (!a && ((b && !c&&!fir.equals(third)) || (!b && c&&!fir.equals(sec))));
             boolean thirdRule = (!a && !b && !c && !fir.equals(sec) && !fir.equals(third) && !sec.equals(third));
             if (firstRule || secondRule || thirdRule) {
                 String s = "<<<<<<< HEAD\n";
