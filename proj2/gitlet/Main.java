@@ -68,7 +68,7 @@ public class Main {
                     System.out.println("Please enter a commit message.");
                     System.exit(0);
                 }
-                Repository.commit(args[1],null);
+                Repository.commit(args[1], null);
                 break;
             case "log":
                 if (!Repository.GITLET_DIR.exists()) {
