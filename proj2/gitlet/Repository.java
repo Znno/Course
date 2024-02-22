@@ -58,6 +58,7 @@ public class Repository {
         Commit intialCommit = new Commit();
         master.setBranchHead(intialCommit.getUID());
         intialCommit.saveCommit();
+        writeObject(TRIE,new trie());
         trie commits = readObject(TRIE, trie.class);
         commits.add(intialCommit.getUID());
         writeObject(TRIE, commits);
@@ -221,7 +222,7 @@ public class Repository {
         writeContents(cwdFile, fileBlob.getContent());
 
     }
-    private class trie implements Serializable {
+    private static class trie implements Serializable {
         private Node root=new Node(false,'0');
 
         private class Node{
