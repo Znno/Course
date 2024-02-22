@@ -1,6 +1,7 @@
 package gitlet;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class Repository {
     public static final File HEAD = join(GITLET_DIR, "head");
     public static final File BRANCHES = join(GITLET_DIR, "branchesMap");
     public static final File CURRENT_BRANCH = join(GITLET_DIR, "current_branch");
+    public static final File TRIE = join(GITLET_DIR,"TRIE");
 
     public static void init() {
         if (GITLET_DIR.exists()) {
@@ -56,6 +58,9 @@ public class Repository {
         Commit intialCommit = new Commit();
         master.setBranchHead(intialCommit.getUID());
         intialCommit.saveCommit();
+        trie commits = readObject(TRIE, trie.class);
+        commits.add(intialCommit.getUID());
+        writeObject(TRIE, commits);
         writeContents(HEAD, intialCommit.getUID());
         master.saveBranch();
         writeContents(CURRENT_BRANCH, master.getUID());
@@ -131,6 +136,9 @@ public class Repository {
         writeObject(ADD_STAGE_FILE, addMap);
         writeObject(REMOVE_STAGE_FILE, removemap);
         newCommit.saveCommit();
+        trie commits = readObject(TRIE, trie.class);
+        commits.add(newCommit.getUID());
+        writeObject(TRIE, commits);
         writeContents(HEAD, newCommit.getUID());
         String currBranch = readContentsAsString(CURRENT_BRANCH);
         File fileBranch = join(BRANCH_DIR, currBranch);
@@ -213,13 +221,62 @@ public class Repository {
         writeContents(cwdFile, fileBlob.getContent());
 
     }
+    private class trie implements Serializable {
+        private Node root=new Node(false,'0');
+
+        private class Node{
+            boolean end;
+            private TreeMap<Character,Node> mp;
+            public Node(boolean is,Character ch){
+                mp.put(ch,null);
+                end=is;
+
+            }
+        }
+        void add(String s){
+            Node curr=root;
+            for(Integer i=0;i<s.length();i++){
+                if(curr.mp.containsKey(s.charAt(i))) {
+                    curr = curr.mp.get(s.charAt(i));
+                }
+                else {
+                    Node newNode=new Node((i.equals(s.length()-1)),s.charAt(i));
+                    curr.mp.put(s.charAt(i),newNode);
+                }
+            }
+        }
+        String get(String s){
+            Node curr=root;
+            StringBuilder temp= new StringBuilder();
+            for(Integer i=0;i<s.length();i++){
+                if(curr.mp.containsKey(s.charAt(i))) {
+                    curr = curr.mp.get(s.charAt(i));
+                    if(i.equals(s.length()-1)){
+                        while (curr.mp.size()!=0){
+                            temp.append(curr.mp.firstEntry().getKey());
+                            curr=curr.mp.firstEntry().getValue();
+                        }
+                    }
+                }
+                else {
+                    return null ;
+                }
+            }
+            return (s+temp);
+        }
+
+    }
 
     public static void checkoutCommit(String commitID, String fileName) {
-        File commitFile = join(COMMITS_DIR, commitID);
-        if (!commitFile.exists()) {
+        trie commits = readObject(TRIE, trie.class);
+        if (commits.get(commitID)==null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         }
+
+        commitID=commits.get(commitID);
+        File commitFile = join(COMMITS_DIR, commitID);
+
         Commit checkCommit = readObject(commitFile, Commit.class);
         String blobID = checkCommit.getBlob(fileName);
         if (blobID == null) {
@@ -370,11 +427,13 @@ public class Repository {
     }
 
     public static void reset(String commitID) {
-        File commitFile = join(COMMITS_DIR, commitID);
-        if (!commitFile.exists()) {
+        trie commits = readObject(TRIE, trie.class);
+        if (commits.get(commitID)==null) {
             System.out.println("No commit with that id exists.");
             System.exit(0);
         }
+        commitID=commits.get(commitID);
+        File commitFile = join(COMMITS_DIR, commitID);
         String currBranch = readContentsAsString(CURRENT_BRANCH);
         File file = join(BRANCH_DIR, currBranch);
         Branch curB = readObject(file, Branch.class);
