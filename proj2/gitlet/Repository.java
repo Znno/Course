@@ -226,7 +226,7 @@ public class Repository {
         private Node root=new Node(false,'0');
 
         private class Node{
-            boolean end;
+            boolean end=false;
             private TreeMap<Character,Node> mp=new TreeMap<>();
             public Node(boolean is,Character ch){
                 mp.put(ch,null);
