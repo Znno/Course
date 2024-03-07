@@ -62,7 +62,7 @@ public class Engine {
         ArrayList<Room> rooms = new ArrayList<Room>();
         //n1234s
         String seedString = input.substring(1, pos);
-        int seed = Integer.parseInt(seedString);
+        long seed = Long.parseLong(seedString);
         RANDOM = new Random(seed);
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
