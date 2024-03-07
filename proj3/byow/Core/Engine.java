@@ -3,8 +3,6 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import com.sun.tools.corba.se.idl.InterfaceGen;
-import edu.neu.ccs.quick.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
