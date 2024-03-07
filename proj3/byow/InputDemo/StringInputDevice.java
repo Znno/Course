@@ -3,7 +3,7 @@ package byow.InputDemo;
 /**
  * Created by hug.
  */
-public class StringInputDevice implements InputSource  {
+public class StringInputDevice implements InputSource {
     private String input;
     private int index;
 

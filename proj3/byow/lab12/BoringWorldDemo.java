@@ -5,7 +5,7 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 /**
- *  Draws a world that is mostly empty except for a small region.
+ * Draws a world that is mostly empty except for a small region.
  */
 public class BoringWorldDemo {
 

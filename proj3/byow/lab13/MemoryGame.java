@@ -8,25 +8,41 @@ import java.awt.Font;
 import java.util.Random;
 
 public class MemoryGame {
-    /** The width of the window of this game. */
+    /**
+     * The width of the window of this game.
+     */
     private int width;
-    /** The height of the window of this game. */
+    /**
+     * The height of the window of this game.
+     */
     private int height;
-    /** The current round the user is on. */
+    /**
+     * The current round the user is on.
+     */
     private int round;
-    /** The Random object used to randomly generate Strings. */
+    /**
+     * The Random object used to randomly generate Strings.
+     */
     private Random rand;
-    /** Whether or not the game is over. */
+    /**
+     * Whether or not the game is over.
+     */
     private boolean gameOver;
-    /** Whether or not it is the player's turn. Used in the last section of the
-     * spec, 'Helpful UI'. */
+    /**
+     * Whether or not it is the player's turn. Used in the last section of the
+     * spec, 'Helpful UI'.
+     */
     private boolean playerTurn;
-    /** The characters we generate random Strings from. */
+    /**
+     * The characters we generate random Strings from.
+     */
     private static final char[] CHARACTERS = "abcdefghijklmnopqrstuvwxyz".toCharArray();
-    /** Encouraging phrases. Used in the last section of the spec, 'Helpful UI'. */
+    /**
+     * Encouraging phrases. Used in the last section of the spec, 'Helpful UI'.
+     */
     private static final String[] ENCOURAGEMENT = {"You can do this!", "I believe in you!",
-                                                   "You got this!", "You're a star!", "Go Bears!",
-                                                   "Too easy for you!", "Wow, so impressive!"};
+            "You got this!", "You're a star!", "Go Bears!",
+            "Too easy for you!", "Wow, so impressive!"};
 
     public static void main(String[] args) {
         if (args.length < 1) {
