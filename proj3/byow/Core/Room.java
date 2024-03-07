@@ -2,7 +2,6 @@ package byow.Core;
 
 import byow.TileEngine.Tileset;
 
-import java.util.Random;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

@@ -1,6 +1,5 @@
 package byow.Core;
 
-import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
@@ -9,7 +8,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class Engine {
-    TERenderer ter = new TERenderer();
+   // TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -85,8 +84,8 @@ public class Engine {
         for (int i = 0; i < rooms.size() - 1; i++) {
             Room.connect(rooms.get(i), rooms.get(i + 1));
         }
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(finalWorldFrame);
+        //ter.initialize(WIDTH, HEIGHT);
+        //ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
 }
